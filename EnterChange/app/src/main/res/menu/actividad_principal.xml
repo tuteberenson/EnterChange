@@ -8,4 +8,11 @@
         android:visible="false"
         android:icon="@drawable/ic_menu_manage"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_agregar_producto"
+        android:orderInCategory="90"
+        android:title="Agregar"
+        android:visible="false"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        app:showAsAction="ifRoom" />
 </menu>

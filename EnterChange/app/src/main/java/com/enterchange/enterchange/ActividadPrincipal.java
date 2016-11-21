@@ -13,15 +13,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+
+import java.util.HashMap;
+
+import static com.enterchange.enterchange.FragmentProductos.LinearFormulario;
+import static com.enterchange.enterchange.FragmentProductos.TxVwNoHayProductos;
+import static com.enterchange.enterchange.FragmentProductos.fab_productos;
+import static com.enterchange.enterchange.FragmentProductos.listViewProductos;
 
 public class ActividadPrincipal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    SessionManager session;
     SQLiteDatabase BaseDeDatos;
     public static Usuarios UsuarioActual;
     Generics generics;
-    MenuItem itemEditarDatos;
+    MenuItem itemEditarDatos, itemAgregarProductos;
     private TextView TxVwHeaderNombre, TxVwHeaderEmail;
     public static NavigationView navigationView;
 
@@ -36,7 +45,21 @@ public class ActividadPrincipal extends AppCompatActivity
 
         generics = new Generics(ActividadPrincipal.this);
 
-        ObtengoUsuarioActual();
+        session = new SessionManager(ActividadPrincipal.this);
+
+
+        session.checkLogin();
+
+        // get user data from session
+        HashMap<String, String> user = session.getUserDetails();
+
+        // name
+        String password = user.get(SessionManager.KEY_PASSWORD);
+
+        // email
+        String email = user.get(SessionManager.KEY_EMAIL);
+
+        ObtengoUsuarioActual(email);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -54,13 +77,13 @@ public class ActividadPrincipal extends AppCompatActivity
         TxVwHeaderEmail.setText(UsuarioActual.getEmail());
     }
 
-    private void ObtengoUsuarioActual()
+    private void ObtengoUsuarioActual(String email)
     {
         BaseDeDatos =generics.AbroBaseDatos();
 
         Cursor ConjuntoDeRegistros;
 
-        ConjuntoDeRegistros = BaseDeDatos.rawQuery("select idusuario, nombre, apellido, username, email, password, direccion, telefono from usuarios where iniciado = 1",null);
+        ConjuntoDeRegistros = BaseDeDatos.rawQuery("select idusuario, nombre, apellido, username, email, password, direccion, telefono from usuarios where email ='"+ email+"'",null);
 
         if (BaseDeDatos!=null)
         {
@@ -95,6 +118,7 @@ public class ActividadPrincipal extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.actividad_principal, menu);
         itemEditarDatos = menu.findItem(R.id.action_editar_datos);
+        itemAgregarProductos = menu.findItem(R.id.action_agregar_producto);
         return true;
     }
 
@@ -106,9 +130,12 @@ public class ActividadPrincipal extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_editar_datos)
+        if (id == R.id.action_agregar_producto)
         {
-
+            LinearFormulario.setVisibility(View.VISIBLE);
+            TxVwNoHayProductos.setVisibility(View.GONE);
+            listViewProductos.setVisibility(View.GONE);
+            fab_productos.setVisibility(View.GONE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -122,28 +149,39 @@ public class ActividadPrincipal extends AppCompatActivity
 
         Fragment fragment = null;
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_productos) {
+
+            itemAgregarProductos.setVisible(true);
+            fragment = new FragmentProductos();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment).commit();
+
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_datos) {
             fragment = new FragmentMisDatos();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment).commit();
 
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about_me) {
 
+        }
+        else if (id == R.id.nav_salir)
+        {
+          session.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
 }

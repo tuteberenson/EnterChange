@@ -40,7 +40,7 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 import static com.enterchange.enterchange.ActividadPrincipal.UsuarioActual;
 
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor> */{
 
 
     /**
@@ -62,6 +62,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
     private TextView TxVwSignUp;
+    SessionManager session;
 
 
     SQLiteDatabase BaseDeDatos;
@@ -75,8 +76,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
        // populateAutoComplete();
 
+        session =new SessionManager(LoginActivity.this);
 
-        UsuarioActual =new Usuarios();
+        //UsuarioActual =new Usuarios();
 
         generics=new Generics(LoginActivity.this);
 
@@ -112,6 +114,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if (session.isLoggedIn())
+        {
+            Intent actividadPrincipal= new Intent(LoginActivity.this,ActividadPrincipal.class);
+            startActivity(actividadPrincipal);
+            finish();
+        }
     }
 
   /*     private void populateAutoComplete() {
@@ -173,8 +182,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mEmailView.getText().toString().trim().toLowerCase();
+        String password = mPasswordView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -215,6 +224,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
             else
             {
+                session.createLoginSession(email, password);
                 Intent actividadPrincipal = new Intent(LoginActivity.this,ActividadPrincipal.class);
                 startActivity(actividadPrincipal);
                 finish();
@@ -223,6 +233,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
            // mAuthTask.execute((Void) null);
         }
     }
+
 
     private boolean existenCredenciales(String email, String password)
     {
@@ -240,7 +251,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             {
                 if (password.equals(UsuarioTraido.getString(5)))
                 {
-                    ActualizarIniciado(email);
+                   // ActualizarIniciado(email);
                     return true;
                 }
                 else
@@ -259,7 +270,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
-    private void ActualizarIniciado(String email)
+   /* private void ActualizarIniciado(String email)
     {
         BaseDeDatos =generics.AbroBaseDatos();
 
@@ -271,7 +282,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         {
             BaseDeDatos.update("usuarios",registroAModificar,"email='"+email+"'",null);
         }
-    }
+    }*/
 
     private boolean isEmailValid(String email) {
         return email.contains("@");
@@ -318,7 +329,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
-    @Override
+  /*  @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
                 // Retrieve data rows for the device user's 'profile' contact.
@@ -333,9 +344,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
+    }*/
 
-    @Override
+  /*  @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<>();
         cursor.moveToFirst();
@@ -345,14 +356,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         addEmailsToAutoComplete(emails);
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
-    }
+    }*/
 
-    private interface ProfileQuery {
+    /*private interface ProfileQuery {
         String[] PROJECTION = {
                 ContactsContract.CommonDataKinds.Email.ADDRESS,
                 ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
@@ -360,17 +371,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
+    }*/
 
 
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+    /*private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
-    }
+    }*/
 
     /**
      * Represents an asynchronous login/registration task used to authenticate

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,11 +24,14 @@ public class SignUpActivity extends Activity {
     public static String TAG = SignUpActivity.class.getSimpleName();
     Generics generics;
     SQLiteDatabase BaseDeDatos;
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        session =new SessionManager(SignUpActivity.this);
 
         usuario = new Usuarios();
 
@@ -42,6 +46,7 @@ public class SignUpActivity extends Activity {
                 guardarEnVariables();
                 if (!ErroresIngreso())
                 {
+                    session.createLoginSession(usuario.getEmail(),usuario.getPassword());
                     Log.d(TAG,"Nombre: "+usuario.getNombre()+" Apellido: "+usuario.getApellido()+" Username: "+usuario.getUsername() + " Email: "+usuario.getEmail()+" Password: "
                             + usuario.getPassword()+" CPassword: "+ConfirmPassword + " Direccion: "+usuario.getDireccion()+ " Telefono: "+usuario.getTelefono());
                     guardarUsuarioEnBD();
@@ -78,7 +83,7 @@ public class SignUpActivity extends Activity {
         nuevoUsuario.put("password",usuario.getPassword());
         nuevoUsuario.put("direccion",usuario.getDireccion());
         nuevoUsuario.put("telefono",usuario.getTelefono());
-        nuevoUsuario.put("iniciado",1);
+        //nuevoUsuario.put("iniciado",1);
 
         BaseDeDatos.insert("usuarios",null,nuevoUsuario);
 
@@ -115,14 +120,14 @@ public class SignUpActivity extends Activity {
     {
         String telefono;
 
-        usuario.setNombre(_InputName.getText().toString());
-        usuario.setApellido(_InputApellido.getText().toString());
-        usuario.setUsername(_InputUsername.getText().toString());
-        usuario.setEmail( _InputEmail.getText().toString());
-        usuario.setPassword(_InputPassword.getText().toString());
-        ConfirmPassword = _InputConfirmPassword.getText().toString();
-        usuario.setDireccion(_InputDireccion.getText().toString());
-        telefono = _InputTelefono.getText().toString();
+        usuario.setNombre(_InputName.getText().toString().trim());
+        usuario.setApellido(_InputApellido.getText().toString().trim());
+        usuario.setUsername(_InputUsername.getText().toString().trim());
+        usuario.setEmail( _InputEmail.getText().toString().trim().toLowerCase());
+        usuario.setPassword(_InputPassword.getText().toString().trim());
+        ConfirmPassword = _InputConfirmPassword.getText().toString().trim();
+        usuario.setDireccion(_InputDireccion.getText().toString().trim());
+        telefono = _InputTelefono.getText().toString().trim();
         usuario.setTelefono(0);
         if (!telefono.equals(""))
         {

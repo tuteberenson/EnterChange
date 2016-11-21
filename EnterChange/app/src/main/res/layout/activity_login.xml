@@ -8,8 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.enterchange.enterchange.LoginActivity"
-    >
+    tools:context="com.enterchange.enterchange.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -29,12 +28,18 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:weightSum="15"
+            android:layout_gravity="center">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:src="@drawable/logo"/>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="0dp"
+                android:layout_weight="3">
 
             <AutoCompleteTextView
                 android:id="@+id/email"
@@ -52,7 +57,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
                 android:layout_marginTop="10dp">
 
             <EditText
@@ -75,7 +81,8 @@
             <Button
                 android:id="@+id/btn_sign_in"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
                 android:layout_marginTop="16dp"
                 android:text="Sign in"
                 android:textSize="20dp"
@@ -86,7 +93,8 @@
 
             <TextView android:id="@+id/link_sign_up"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:layout_marginTop="5dp"
                 android:text="Registrate acá"
                 android:gravity="center"

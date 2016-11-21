@@ -110,13 +110,12 @@ public class FragmentMisDatos extends Fragment {
             EdTxEmail.requestFocus();
             HayErrores=true;
         }
-        else if (existeEmail(EdTxEmail.getText().toString()) && !EdTxEmail.getText().toString().equals(UsuarioActual.getEmail()))
+        else if (existeUsuario(EdTxUsername.getText().toString()) && !EdTxUsername.getText().toString().equals(UsuarioActual.getUsername()))
         {
-            EdTxEmail.setError("Ya existe el email");
-            EdTxEmail.requestFocus();
+            EdTxUsername.setError("Ya existe el username");
+            EdTxUsername.requestFocus();
             HayErrores=true;
         }
-
 
         if (TextUtils.isEmpty(EdTxDireccion.getText().toString()))
         {
@@ -137,12 +136,13 @@ public class FragmentMisDatos extends Fragment {
         }
     }
 
-    private boolean existeEmail(String email) {
+    private boolean existeUsuario(String username)
+    {
         BaseDeDatos =generics.AbroBaseDatos();
 
         Cursor ConjuntoDeRegistros;
 
-        String query="select * from usuarios where email='"+email+"'";
+        String query="select * from usuarios where username='"+username+"'";
 
         ConjuntoDeRegistros = BaseDeDatos.rawQuery(query, null);
 
@@ -168,7 +168,6 @@ public class FragmentMisDatos extends Fragment {
         ModificarUserActual();
         activarControles(false);
         ModificarEnBD();
-
 
         TxVwHeaderNombre.setText(UsuarioActual.getNombre()+" "+UsuarioActual.getApellido());
         EdTxNombre_Apellido.setText(UsuarioActual.getNombre()+" "+UsuarioActual.getApellido());

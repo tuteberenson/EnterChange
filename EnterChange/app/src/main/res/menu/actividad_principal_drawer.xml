@@ -3,8 +3,8 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:id="@+id/nav_productos"
+            android:icon="@drawable/ic_opened_packaged"
             android:title="Productos" />
         <item
             android:id="@+id/nav_gallery"
@@ -12,35 +12,35 @@
             android:title="Lotes" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_exchange_arrows"
             android:title="Intercambios" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_donation"
             android:title="Donaciones" />
         <item
             android:id="@+id/nav_buscar"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_search_black_24dp"
             android:title="Buscar" />
     </group>
 
     <item android:title="Más">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:id="@+id/nav_datos"
+                android:icon="@drawable/ic_profile"
                 android:title="Datos" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="About us" />
+                android:id="@+id/nav_about_me"
+                android:icon="@drawable/ic_about_me"
+                android:title="About me" />
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_menu_manage"
                 android:title="Configuracion" />
             <item
                 android:id="@+id/nav_salir"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_log_out"
                 android:title="Salir" />
         </menu>
     </item>
