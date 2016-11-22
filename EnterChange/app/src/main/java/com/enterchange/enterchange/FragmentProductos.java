@@ -1,6 +1,7 @@
 package com.enterchange.enterchange;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,23 +34,24 @@ import static com.enterchange.enterchange.ActividadPrincipal.UsuarioActual;
 public class FragmentProductos extends Fragment {
 
 
-    public static EditText EdTxNombreProducto, EdTxDetalleProducto,EdTxValorMinimo,EdTxValorMaximo;
+     EditText EdTxNombreProducto, EdTxDetalleProducto,EdTxValorMinimo,EdTxValorMaximo;
     Spinner spinnerCategorias;
     Button btnOk;
-    public static ListView listViewProductos;
-    public static LinearLayout LinearFormulario;
-    public static TextView TxVwNoHayProductos;
+    ListView listViewProductos;
+    LinearLayout LinearFormulario;
+    TextView TxVwNoHayProductos;
     Generics generics;
     Context thisContext;
     SQLiteDatabase BaseDeDatos;
     AdapterListProductos adapterListProductos;
-    public static Boolean estoyEditando;
+    Boolean estoyEditando;
     Productos productoNuevo;
     Integer posicionProductoAModificar = 0;
+    View InfladorLayout;
 
-    public FragmentProductos() {
+    /*public FragmentProductos() {
         // Required empty public constructor
-    }
+    }*/
 
 
     @Override
@@ -62,6 +64,8 @@ public class FragmentProductos extends Fragment {
         thisContext = container.getContext();
 
         generics = new Generics(thisContext);
+
+        InfladorLayout=vista;
 
         AsociasVistas(vista);
 
@@ -348,6 +352,18 @@ public class FragmentProductos extends Fragment {
         }
     }
 
+    public void agregarProductoMenuItem()
+    {
+        AsociasVistas(InfladorLayout);
+        LinearFormulario.setVisibility(View.VISIBLE);
+        TxVwNoHayProductos.setVisibility(View.GONE);
+        listViewProductos.setVisibility(View.GONE);
+        estoyEditando=false;
+        EdTxNombreProducto.setText("");
+        EdTxDetalleProducto.setText("");
+        EdTxValorMinimo.setText("");
+        EdTxValorMaximo.setText("");
+    }
     private void AsociasVistas(View vista)
     {
         EdTxNombreProducto= (EditText)vista.findViewById(R.id.input_nombre_producto);

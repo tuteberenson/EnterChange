@@ -18,17 +18,9 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-import static com.enterchange.enterchange.FragmentProductos.EdTxDetalleProducto;
-import static com.enterchange.enterchange.FragmentProductos.EdTxNombreProducto;
-import static com.enterchange.enterchange.FragmentProductos.EdTxValorMaximo;
-import static com.enterchange.enterchange.FragmentProductos.EdTxValorMinimo;
-import static com.enterchange.enterchange.FragmentProductos.LinearFormulario;
-import static com.enterchange.enterchange.FragmentProductos.TxVwNoHayProductos;
-import static com.enterchange.enterchange.FragmentProductos.estoyEditando;
-import static com.enterchange.enterchange.FragmentProductos.listViewProductos;
 
 public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentMisDatos.InterfaseModificarNavigationDrawer{
 
     SessionManager session;
     SQLiteDatabase BaseDeDatos;
@@ -37,7 +29,7 @@ public class ActividadPrincipal extends AppCompatActivity
     MenuItem itemEditarDatos, itemAgregarProductos;
     private TextView TxVwHeaderNombre, TxVwHeaderEmail;
     public static NavigationView navigationView;
-
+    FragmentProductos fragmentProductos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +43,8 @@ public class ActividadPrincipal extends AppCompatActivity
 
         session = new SessionManager(ActividadPrincipal.this);
 
+
+        fragmentProductos = new FragmentProductos();
 
         session.checkLogin();
 
@@ -112,9 +106,12 @@ public class ActividadPrincipal extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else
+        {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -136,14 +133,7 @@ public class ActividadPrincipal extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_agregar_producto)
         {
-            LinearFormulario.setVisibility(View.VISIBLE);
-            TxVwNoHayProductos.setVisibility(View.GONE);
-            listViewProductos.setVisibility(View.GONE);
-            estoyEditando=false;
-            EdTxNombreProducto.setText("");
-            EdTxDetalleProducto.setText("");
-            EdTxValorMinimo.setText("");
-            EdTxValorMaximo.setText("");
+            fragmentProductos.agregarProductoMenuItem();
         }
 
         return super.onOptionsItemSelected(item);
@@ -158,12 +148,11 @@ public class ActividadPrincipal extends AppCompatActivity
         Fragment fragment = null;
 
         if (id == R.id.nav_productos) {
-
+            
+            fragmentProductos = new FragmentProductos();
             itemAgregarProductos.setVisible(true);
-            fragment = new FragmentProductos();
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment).commit();
-
+            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentProductos).commit();
 
         } else if (id == R.id.nav_gallery) {
 
@@ -174,7 +163,8 @@ public class ActividadPrincipal extends AppCompatActivity
         } else if (id == R.id.nav_datos) {
             fragment = new FragmentMisDatos();
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment)
+                    .commit();
 
 
         } else if (id == R.id.nav_about_me) {
@@ -190,6 +180,10 @@ public class ActividadPrincipal extends AppCompatActivity
         return true;
     }
 
-
-
+    @Override
+    public void ModificarNavigationDrawer()
+    {
+        String NombreApellido = UsuarioActual.getNombre() + " "+UsuarioActual.getApellido();
+        TxVwHeaderNombre.setText(NombreApellido);
+    }
 }

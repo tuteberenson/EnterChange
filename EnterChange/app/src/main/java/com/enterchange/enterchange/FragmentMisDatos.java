@@ -169,7 +169,6 @@ public class FragmentMisDatos extends Fragment {
         activarControles(false);
         ModificarEnBD();
 
-        TxVwHeaderNombre.setText(UsuarioActual.getNombre()+" "+UsuarioActual.getApellido());
         EdTxNombre_Apellido.setText(UsuarioActual.getNombre()+" "+UsuarioActual.getApellido());
     }
 
@@ -277,6 +276,12 @@ public class FragmentMisDatos extends Fragment {
                 EdTxTelefono.setText("-");
             }
         }
+    }
+
+    public interface InterfaseModificarNavigationDrawer
+    {
+        public void ModificarNavigationDrawer();
+
     }
 
 }
