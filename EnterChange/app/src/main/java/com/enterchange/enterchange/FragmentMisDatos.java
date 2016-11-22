@@ -262,14 +262,20 @@ public class FragmentMisDatos extends Fragment {
             EdTxNombre_Apellido.setText(UsuarioActual.getNombre());
             EdTxNombre_Apellido.requestFocus();
             fab.setVisibility(View.INVISIBLE);
-            EdTxTelefono.setText("");
+            if (EdTxTelefono.getText().toString().equals("-"))
+            {
+                EdTxTelefono.setText("");
+            }
         }
         else
         {
             EdTxApellido.setVisibility(View.GONE);
             btnOK.setVisibility(View.INVISIBLE);
             fab.setVisibility(View.VISIBLE);
-            EdTxTelefono.setText("-");
+            if (EdTxTelefono.getText().toString().equals(""))
+            {
+                EdTxTelefono.setText("-");
+            }
         }
     }
 

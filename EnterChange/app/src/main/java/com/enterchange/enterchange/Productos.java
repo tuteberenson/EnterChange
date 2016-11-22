@@ -7,19 +7,20 @@ package com.enterchange.enterchange;
 public class Productos
 {
     private String Nombre, Detalle, Categoria;
-    private Integer ValorMinimo, ValorMaximo;
+    private Integer ValorMinimo, ValorMaximo, IdProducto;
 
     public  Productos()
     {
 
     }
-    public Productos(String nombre, String detalle, String categoria, Integer valorMinimo, Integer valorMaximo)
+    public Productos(String nombre, String detalle, String categoria, Integer valorMinimo, Integer valorMaximo, Integer idProducto)
     {
         this.Nombre = nombre;
         this.Detalle = detalle;
         this.Categoria = categoria;
         this.ValorMinimo = valorMinimo;
         this.ValorMaximo = valorMaximo;
+        IdProducto = idProducto;
     }
 
     public String getNombre() {
@@ -59,5 +60,13 @@ public class Productos
 
     public void setValorMaximo(Integer valorMaximo) {
         ValorMaximo = valorMaximo;
+    }
+
+    public Integer getIdProducto() {
+        return IdProducto;
+    }
+
+    public void setIdProducto(Integer idProducto) {
+        IdProducto = idProducto;
     }
 }

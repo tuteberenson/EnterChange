@@ -18,9 +18,13 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
+import static com.enterchange.enterchange.FragmentProductos.EdTxDetalleProducto;
+import static com.enterchange.enterchange.FragmentProductos.EdTxNombreProducto;
+import static com.enterchange.enterchange.FragmentProductos.EdTxValorMaximo;
+import static com.enterchange.enterchange.FragmentProductos.EdTxValorMinimo;
 import static com.enterchange.enterchange.FragmentProductos.LinearFormulario;
 import static com.enterchange.enterchange.FragmentProductos.TxVwNoHayProductos;
-import static com.enterchange.enterchange.FragmentProductos.fab_productos;
+import static com.enterchange.enterchange.FragmentProductos.estoyEditando;
 import static com.enterchange.enterchange.FragmentProductos.listViewProductos;
 
 public class ActividadPrincipal extends AppCompatActivity
@@ -135,7 +139,11 @@ public class ActividadPrincipal extends AppCompatActivity
             LinearFormulario.setVisibility(View.VISIBLE);
             TxVwNoHayProductos.setVisibility(View.GONE);
             listViewProductos.setVisibility(View.GONE);
-            fab_productos.setVisibility(View.GONE);
+            estoyEditando=false;
+            EdTxNombreProducto.setText("");
+            EdTxDetalleProducto.setText("");
+            EdTxValorMinimo.setText("");
+            EdTxValorMaximo.setText("");
         }
 
         return super.onOptionsItemSelected(item);

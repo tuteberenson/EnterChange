@@ -1,18 +1,19 @@
 package com.enterchange.enterchange;
 
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,7 +33,7 @@ import static com.enterchange.enterchange.ActividadPrincipal.UsuarioActual;
 public class FragmentProductos extends Fragment {
 
 
-    EditText EdTxNombreProducto, EdTxDetalleProducto,EdTxValorMinimo,EdTxValorMaximo;
+    public static EditText EdTxNombreProducto, EdTxDetalleProducto,EdTxValorMinimo,EdTxValorMaximo;
     Spinner spinnerCategorias;
     Button btnOk;
     public static ListView listViewProductos;
@@ -42,10 +43,9 @@ public class FragmentProductos extends Fragment {
     Context thisContext;
     SQLiteDatabase BaseDeDatos;
     AdapterListProductos adapterListProductos;
-    Boolean estoyEditando;
+    public static Boolean estoyEditando;
     Productos productoNuevo;
-
-  public static FloatingActionButton fab_productos;
+    Integer posicionProductoAModificar = 0;
 
     public FragmentProductos() {
         // Required empty public constructor
@@ -79,22 +79,73 @@ public class FragmentProductos extends Fragment {
                     {
                         llenarNuevoProducto();
                         agregarProductoBD();
-
+                        limpiarFormulario();
                         listViewProductos.setAdapter(null);
                         adapterListProductos=new AdapterListProductos(thisContext,R.layout.list_item_producto,LeerProductos());
                         listViewProductos.setAdapter(adapterListProductos);
+                            mostrarVistas(true, false);
 
-                        mostrarVistas(true,false);
+                    }
+                    else
+                    {
+                        actualizarProductoBD(adapterListProductos.getItem(posicionProductoAModificar).getIdProducto());
+                        adapterListProductos=new AdapterListProductos(thisContext,R.layout.list_item_producto, LeerProductos());
+                        listViewProductos.setAdapter(adapterListProductos);
+                            mostrarVistas(true, false);
+
                     }
                 }
             }
         });
 
-        fab_productos.setOnClickListener(new View.OnClickListener() {
+        listViewProductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onClick(View view) {
-                mostrarVistas(false,true);
-                estoyEditando=false;
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+            {
+                new AlertDialog.Builder(thisContext)
+                        .setTitle("¿Editar o Eliminar?")
+                        .setMessage("Producto: "+adapterListProductos.getItem(position).getNombre())
+                        .setPositiveButton("Editar", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                posicionProductoAModificar = position;
+                                modificarProducto(adapterListProductos.getItem(position));
+                                estoyEditando=true;
+                                mostrarVistas(false,true);
+                            }
+
+                        })
+                        .setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(thisContext)
+                                        .setTitle("Eliminar")
+                                        .setMessage("¿Desea eliminar el producto: "+adapterListProductos.getItem(position).getNombre()+"?")
+                                        .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which)
+                                            {
+                                                eliminarProductoBD(adapterListProductos.getItem(position).getIdProducto());
+                                                adapterListProductos=new AdapterListProductos(thisContext,R.layout.list_item_producto, LeerProductos());
+                                                listViewProductos.setAdapter(adapterListProductos);
+                                                if (!LeerProductos().isEmpty()) {
+                                                    mostrarVistas(true, false);
+                                                }
+                                                else {
+                                                    mostrarVistas(false,false);
+                                                }
+                                            }
+                                        })
+                                        .setNegativeButton("No",null)
+                                        .setCancelable(false)
+                                        .show();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+                return true;
             }
         });
 
@@ -112,13 +163,52 @@ public class FragmentProductos extends Fragment {
         return vista;
     }
 
+    private void actualizarProductoBD(Integer idProducto)
+    {
+        BaseDeDatos =generics.AbroBaseDatos();
+
+        ContentValues registroAModificar = new ContentValues();
+
+        registroAModificar.put("nombre",EdTxNombreProducto.getText().toString());
+        registroAModificar.put("detalle",EdTxDetalleProducto.getText().toString());
+        registroAModificar.put("valormin",Integer.valueOf(EdTxValorMinimo.getText().toString()));
+        registroAModificar.put("valormax",Integer.valueOf(EdTxValorMaximo.getText().toString()));
+        registroAModificar.put("categoria", spinnerCategorias.getSelectedItem().toString());
+
+        if (BaseDeDatos!=null)
+        {
+            BaseDeDatos.update("productos",registroAModificar,"idproducto="+idProducto,null);
+        }
+    }
+
+    private void limpiarFormulario()
+    {
+        EdTxNombreProducto.setText("");
+        EdTxDetalleProducto.setText("");
+        EdTxValorMinimo.setText("");
+        EdTxValorMaximo.setText("");
+    }
+
+    private void modificarProducto(Productos item)
+    {
+        EdTxNombreProducto.setText(item.getNombre());
+        EdTxDetalleProducto.setText(item.getDetalle());
+        EdTxValorMinimo.setText(item.getValorMinimo().toString());
+        EdTxValorMaximo.setText(item.getValorMaximo().toString());
+    }
+
+
     private void llenarNuevoProducto()
     {
+        Integer ultimoId;
+        ultimoId =  obtenerUltimoId();
+        ultimoId++;
+
         productoNuevo= new Productos(EdTxNombreProducto.getText().toString().trim(),
                 EdTxDetalleProducto.getText().toString().trim(),
                 spinnerCategorias.getSelectedItem().toString(),
                 Integer.valueOf(EdTxValorMinimo.getText().toString()),
-                Integer.valueOf(EdTxValorMaximo.getText().toString()));
+                Integer.valueOf(EdTxValorMaximo.getText().toString()), ultimoId);
     }
 
    public void llenarCategorias()
@@ -136,15 +226,10 @@ public class FragmentProductos extends Fragment {
 
     private void agregarProductoBD()
     {
-
-        Integer ultimoId;
-
+        BaseDeDatos =generics.AbroBaseDatos();
         ContentValues NuevoProducto = new ContentValues();
 
-        ultimoId =  obtenerUltimoId();
-        ultimoId++;
-
-        NuevoProducto.put("idproducto",ultimoId);
+        NuevoProducto.put("idproducto",productoNuevo.getIdProducto());
         NuevoProducto.put("idusuario",UsuarioActual.getIdUsuario());
         NuevoProducto.put("nombre", productoNuevo.getNombre());
         NuevoProducto.put("detalle", productoNuevo.getDetalle());
@@ -180,6 +265,17 @@ public class FragmentProductos extends Fragment {
         }
 
         return ultimoId;
+    }
+
+    public void eliminarProductoBD(Integer idProducto)
+    {
+        BaseDeDatos = generics.AbroBaseDatos();
+
+        if (BaseDeDatos!=null)
+        {
+            BaseDeDatos.delete("productos","idproducto="+idProducto,null);
+        }
+
     }
 
     private boolean ErroresIngreso()
@@ -235,7 +331,6 @@ public class FragmentProductos extends Fragment {
             TxVwNoHayProductos.setVisibility(View.GONE);
             listViewProductos.setVisibility(View.VISIBLE);
             LinearFormulario.setVisibility(View.GONE);
-            fab_productos.setVisibility(View.VISIBLE);
 
         } else
         {
@@ -243,12 +338,12 @@ public class FragmentProductos extends Fragment {
                 TxVwNoHayProductos.setVisibility(View.GONE);
                 listViewProductos.setVisibility(View.GONE);
                 LinearFormulario.setVisibility(View.VISIBLE);
-                fab_productos.setVisibility(View.GONE);
+
             } else {
                 TxVwNoHayProductos.setVisibility(View.VISIBLE);
                 listViewProductos.setVisibility(View.GONE);
                 LinearFormulario.setVisibility(View.GONE);
-                fab_productos.setVisibility(View.GONE);
+
             }
         }
     }
@@ -270,7 +365,6 @@ public class FragmentProductos extends Fragment {
 
         TxVwNoHayProductos= (TextView)vista.findViewById(R.id.txVwProductos);
 
-        fab_productos = (FloatingActionButton)vista.findViewById(R.id.fab_productos);
     }
 
     public ArrayList<Productos> LeerProductos()
@@ -289,7 +383,7 @@ public class FragmentProductos extends Fragment {
             if (ResultadoProductos.moveToFirst())
             {
                 do {
-                    unProducto = new Productos(ResultadoProductos.getString(2),ResultadoProductos.getString(3),ResultadoProductos.getString(6),ResultadoProductos.getInt(4),ResultadoProductos.getInt(5));
+                    unProducto = new Productos(ResultadoProductos.getString(2),ResultadoProductos.getString(3),ResultadoProductos.getString(6),ResultadoProductos.getInt(4),ResultadoProductos.getInt(5), ResultadoProductos.getInt(0));
                     listaProductos.add(unProducto);
 
                 }while (ResultadoProductos.moveToNext());
