@@ -4,41 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
-import static com.enterchange.enterchange.ActividadPrincipal.UsuarioActual;
 
 public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor> */{
 
@@ -214,20 +194,31 @@ public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor>
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            if (!existenCredenciales(email, password))
+            String passwordSiExisteEmail=existenCredenciales_email(email); // Si existe el email devuelve la password sino devuelve ""
+            if (passwordSiExisteEmail.equals(""))
             {
                 showProgress(false);
-                Toast.makeText(this, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
                 mEmailView.setError("Verifique el mail");
+                mEmailView.setText("");
                 mPasswordView.setText("");
                 mEmailView.requestFocus();
             }
             else
             {
-                session.createLoginSession(email, password);
-                Intent actividadPrincipal = new Intent(LoginActivity.this,ActividadPrincipal.class);
-                startActivity(actividadPrincipal);
-                finish();
+                if (password.equals(passwordSiExisteEmail))
+                {
+                    session.createLoginSession(email, password);
+                    Intent actividadPrincipal = new Intent(LoginActivity.this,ActividadPrincipal.class);
+                    startActivity(actividadPrincipal);
+                    finish();
+                }
+                else
+                {
+                    showProgress(false);
+                    mPasswordView.setError("Verifique la contraseña");
+                    mPasswordView.requestFocus();
+                }
+
             }
             //mAuthTask = new UserLoginTask(email, password);
            // mAuthTask.execute((Void) null);
@@ -235,7 +226,7 @@ public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor>
     }
 
 
-    private boolean existenCredenciales(String email, String password)
+    private String existenCredenciales_email(String email)
     {
         BaseDeDatos =generics.AbroBaseDatos();
 
@@ -249,24 +240,17 @@ public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor>
         {
             if (UsuarioTraido.moveToFirst())
             {
-                if (password.equals(UsuarioTraido.getString(5)))
-                {
                    // ActualizarIniciado(email);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                    return UsuarioTraido.getString(5);
             }
             else
             {
-                return false;
+                return "";
             }
         }
         else
         {
-            return false;
+            return "";
         }
     }
 
@@ -290,7 +274,7 @@ public class LoginActivity extends Activity /*implements LoaderCallbacks<Cursor>
 
     private boolean isPasswordValid(String password) {
 
-        return password.length() > 4;
+        return password.length() > 1;
     }
 
     /**

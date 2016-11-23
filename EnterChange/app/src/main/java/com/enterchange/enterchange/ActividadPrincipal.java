@@ -20,7 +20,8 @@ import java.util.HashMap;
 
 
 public class ActividadPrincipal extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentMisDatos.InterfaseModificarNavigationDrawer{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FragmentMisDatos.InterfaseModificarNavigationDrawer{
 
     SessionManager session;
     SQLiteDatabase BaseDeDatos;
@@ -73,6 +74,8 @@ public class ActividadPrincipal extends AppCompatActivity
 
         TxVwHeaderNombre.setText(UsuarioActual.getNombre()+" "+UsuarioActual.getApellido());
         TxVwHeaderEmail.setText(UsuarioActual.getEmail());
+
+        setDefaultFragment();
     }
 
     private void ObtengoUsuarioActual(String email)
@@ -106,12 +109,15 @@ public class ActividadPrincipal extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else
-        {
-            super.onBackPressed();
-        }
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            {
+                super.onBackPressed();
 
+
+            }
+        }
     }
 
     @Override
@@ -145,30 +151,36 @@ public class ActividadPrincipal extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment = null;
+        setDefaultFragment();
 
         if (id == R.id.nav_productos) {
-            
             fragmentProductos = new FragmentProductos();
             itemAgregarProductos.setVisible(true);
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentProductos).commit();
-
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_datos) {
-            fragment = new FragmentMisDatos();
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragment)
+            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentProductos)
+                    .addToBackStack(null)
                     .commit();
 
+        } else if (id == R.id.nav_gallery) {
+            itemAgregarProductos.setVisible(false);
+
+        } else if (id == R.id.nav_slideshow) {
+            itemAgregarProductos.setVisible(false);
+
+        } else if (id == R.id.nav_manage) {
+            itemAgregarProductos.setVisible(false);
+        } else if (id == R.id.nav_datos) {
+            FragmentMisDatos fragmentMisDatos = new FragmentMisDatos();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentMisDatos)
+                    .addToBackStack(null)
+                    .commit();
+            fragmentMisDatos.setInterfase(this);
+
+            itemAgregarProductos.setVisible(false);
 
         } else if (id == R.id.nav_about_me) {
-
+            itemAgregarProductos.setVisible(false);
         }
         else if (id == R.id.nav_salir)
         {
@@ -185,5 +197,13 @@ public class ActividadPrincipal extends AppCompatActivity
     {
         String NombreApellido = UsuarioActual.getNombre() + " "+UsuarioActual.getApellido();
         TxVwHeaderNombre.setText(NombreApellido);
+    }
+
+    public void setDefaultFragment()
+    {
+        Fragment defaultFragment = new FragmentEnConstruccion();
+        FragmentManager fragmentManagerDefault = getFragmentManager();
+        fragmentManagerDefault.beginTransaction().replace(R.id.content_actividad_principal, defaultFragment)
+                .commit();
     }
 }

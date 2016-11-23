@@ -5,6 +5,7 @@
     android:id="@+id/content_actividad_principal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="55dp"
     tools:context="com.enterchange.enterchange.ActividadPrincipal"
     tools:showIn="@layout/app_bar_actividad_principal">
 
