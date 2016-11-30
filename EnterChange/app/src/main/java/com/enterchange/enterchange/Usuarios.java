@@ -1,5 +1,7 @@
 package com.enterchange.enterchange;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Tute on 19/11/2016.
  */
@@ -7,7 +9,8 @@ package com.enterchange.enterchange;
 public class Usuarios
 {
     private Integer idUsuario;
-    private String Nombre, Apellido, Username, Email, Password, Direccion;
+    private String Nombre, Apellido, Username, Email, Password;
+    private Direcciones Direccion;
     private Integer Telefono;
 
     public Usuarios()
@@ -55,14 +58,6 @@ public class Usuarios
         Password = password;
     }
 
-    public String getDireccion() {
-        return Direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        Direccion = direccion;
-    }
-
     public Integer getTelefono() {
         return Telefono;
     }
@@ -77,5 +72,13 @@ public class Usuarios
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public Direcciones getDireccion() {
+        return Direccion;
+    }
+
+    public void setDireccion(Direcciones direccion) {
+        Direccion = direccion;
     }
 }

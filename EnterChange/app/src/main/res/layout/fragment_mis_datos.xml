@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
@@ -75,22 +74,48 @@
             android:textColor="@color/colorPrimary"/>
         </android.support.design.widget.TextInputLayout>
 
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:weightSum="4">
+
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2.5"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="22dp"
-            android:hint="Direccion"
-            android:enabled="false"
-            android:id="@+id/txt_direccion"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:hint="Direccion"
+                android:enabled="false"
+                android:id="@+id/txt_direccion"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"/>
         </android.support.design.widget.TextInputLayout>
 
+           <Button
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="validar"
+               android:id="@+id/btnValidar_direccion_modificar"
+               android:visibility="invisible"
+               android:layout_gravity="center"/>
+           <ImageView
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="0.5"
+               android:visibility="invisible"
+               android:id="@+id/imgVw_verificado_m"
+               android:src="@drawable/ic_close_black_24dp"
+               />
+    </LinearLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -122,6 +147,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin" />
-
     </LinearLayout>
+
 </ScrollView>

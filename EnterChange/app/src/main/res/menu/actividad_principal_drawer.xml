@@ -7,15 +7,15 @@
             android:icon="@drawable/ic_opened_packaged"
             android:title="Productos" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_lotes"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Lotes" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_intercambios"
             android:icon="@drawable/ic_exchange_arrows"
             android:title="Intercambios" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_donaciones"
             android:icon="@drawable/ic_donation"
             android:title="Donaciones" />
         <item

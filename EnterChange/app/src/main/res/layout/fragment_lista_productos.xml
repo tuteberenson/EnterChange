@@ -1,0 +1,40 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.enterchange.enterchange.FragmentListaProductos">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:id="@+id/linear_contenedor_lista_prods"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Productos para intercambiar"
+        android:textSize="20dp"
+        android:gravity="center"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_view_productos_al_azar">
+    </ListView>
+</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/txVwNoHayProductos"
+        android:text="No se encontraron intercambios hasta el momento"/>
+
+
+</FrameLayout>

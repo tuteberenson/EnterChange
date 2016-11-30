@@ -1,0 +1,75 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.enterchange.enterchange.ActivityDetalleProducto"
+    android:weightSum="10"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="30dp"
+        android:text="Producto"
+        android:gravity="center"
+        android:id="@+id/act_nombre_producto"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Categoria"
+            android:textSize="20dp"
+            android:id="@+id/act_categoria_producto"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Rango-Rango"
+            android:textSize="20dp"
+            android:id="@+id/act_rango_producto"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Detalle"
+        android:textSize="20dp"
+        android:id="@+id/act_detalle_producto"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Intercambiar"
+        android:textSize="20dp"
+        android:id="@+id/act_btn_intercambiar_producto"/>
+
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_detalle_producto"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="6"
+    tools:context="com.enterchange.enterchange.ActivityDetalleProducto" />
+
+</LinearLayout>

@@ -20,7 +20,7 @@ public class Generics
         // boolean huboError = false;
         String motivoError = "";
         try {
-            ManejadorDeBaseDeDatos accesoBD = new ManejadorDeBaseDeDatos(mContext, "baseDeDatos", null, 1);
+            ManejadorDeBaseDeDatos accesoBD = new ManejadorDeBaseDeDatos(mContext, "baseDeDatos", null,1);
             return accesoBD.getWritableDatabase();
         } catch (Exception error) {
 
@@ -35,5 +35,21 @@ public class Generics
         ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
+    }
+
+    public boolean isConnectedToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+
+        }
+        return false;
     }
 }

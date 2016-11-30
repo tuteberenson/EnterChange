@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    android:weightSum="2"
+    android:id="@+id/unItemListViewIntercambio"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3.5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="P1"
+            android:id="@+id/inter_producto_1"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="X"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="P2"
+            android:id="@+id/inter_producto_2"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="U1"
+            android:id="@+id/inter_usuario_1"
+            android:textSize="20dp"
+            android:textColor="#000"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Estado"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:id="@+id/inter_estado"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="U2"
+            android:id="@+id/inter_usuario_2"
+            android:textSize="20dp"
+            android:textColor="#000"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>

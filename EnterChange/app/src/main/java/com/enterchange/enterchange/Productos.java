@@ -1,26 +1,32 @@
 package com.enterchange.enterchange;
 
+import java.io.Serializable;
+
 /**
  * Created by Tute on 21/11/2016.
  */
 
-public class Productos
+public class Productos implements Serializable
 {
-    private String Nombre, Detalle, Categoria;
-    private Integer ValorMinimo, ValorMaximo, IdProducto;
+    private String Nombre, Detalle;
+    private Categorias Categorias;
+    private Integer ValorMinimo, ValorMaximo, IdProducto, IdUsuario;
+    private Boolean Estado;
 
     public  Productos()
     {
 
     }
-    public Productos(String nombre, String detalle, String categoria, Integer valorMinimo, Integer valorMaximo, Integer idProducto)
+    public Productos(String nombre, String detalle, Boolean estado, Categorias categoria, Integer valorMinimo, Integer valorMaximo, Integer idProducto, Integer idUsuario)
     {
         this.Nombre = nombre;
         this.Detalle = detalle;
-        this.Categoria = categoria;
+        Estado = estado;
+        this.Categorias = categoria;
         this.ValorMinimo = valorMinimo;
         this.ValorMaximo = valorMaximo;
         IdProducto = idProducto;
+        IdUsuario = idUsuario;
     }
 
     public String getNombre() {
@@ -37,14 +43,6 @@ public class Productos
 
     public void setDetalle(String detalle) {
         Detalle = detalle;
-    }
-
-    public String getCategoria() {
-        return Categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        Categoria = categoria;
     }
 
     public Integer getValorMinimo() {
@@ -68,5 +66,29 @@ public class Productos
 
     public void setIdProducto(Integer idProducto) {
         IdProducto = idProducto;
+    }
+
+    public Categorias getCategorias() {
+        return Categorias;
+    }
+
+    public void setCategorias(com.enterchange.enterchange.Categorias categorias) {
+        Categorias = categorias;
+    }
+
+    public Boolean getEstado() {
+        return Estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        Estado = estado;
+    } //Si es true, esta para mostrar, si es false no está para mostrar
+
+    public Integer getIdUsuario() {
+        return IdUsuario;
+    }
+
+    public void setIdUsuario(Integer idUsuario) {
+        IdUsuario = idUsuario;
     }
 }

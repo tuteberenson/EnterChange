@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent">
+    android:background="@color/colorAccent"
+    android:id="@+id/unItemListView">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,13 +17,15 @@
                 android:text="Nombre"
                 android:id="@+id/nombre_producto"
                 android:textSize="20dp"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.5"
                 android:weightSum="2"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -30,15 +33,18 @@
                     android:text="valor"
                     android:textColor="#000"
                     android:textSize="17dp"
-                    android:id="@+id/valor_producto"/>
+                    android:id="@+id/valor_producto"
+                    android:gravity="center"/>
                 <TextView
+
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="Categoria"
                     android:id="@+id/categoriaProducto"
                     android:textColor="#000"
-                    android:textSize="17dp"/>
+                    android:textSize="17dp"
+                    android:gravity="center"/>
             </LinearLayout>
     </LinearLayout>
     <TextView
