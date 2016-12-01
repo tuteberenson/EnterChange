@@ -132,8 +132,8 @@ public class SignUpActivity extends Activity {
         nuevoUsuario.put("email",usuario.getEmail());
         nuevoUsuario.put("password",usuario.getPassword());
         nuevoUsuario.put("direccion",usuario.getDireccion().getDireccion());
-        nuevoUsuario.put("latitud",(int)usuario.getDireccion().getLatLng().latitude);
-        nuevoUsuario.put("longitud",(int)usuario.getDireccion().getLatLng().longitude);
+        nuevoUsuario.put("latitud",usuario.getDireccion().getLatLng().latitude);
+        nuevoUsuario.put("longitud",usuario.getDireccion().getLatLng().longitude);
         nuevoUsuario.put("telefono",usuario.getTelefono());
         //nuevoUsuario.put("iniciado",1);
 
