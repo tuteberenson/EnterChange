@@ -20,12 +20,12 @@ public class ManejadorDeBaseDeDatos extends SQLiteOpenHelper
 
         String sqlCrearTablaUsuarios, sqlCrearTablaProductos, sqlCrearTablaCategorias, sqlCrearTablaIntercambios;
 
-        sqlCrearTablaUsuarios="create table usuarios (idusuario integer autoincremental, nombre text, apellido text, username text, email text, password text, direccion text, telefono integer, latitud integer, longitud integer)";
+        sqlCrearTablaUsuarios="create table usuarios (idusuario integer autoincremental, nombre text, apellido text, username text, email text, password text, direccion text, telefono integer, latitud text, longitud text)";
         baseDeDatos.execSQL(sqlCrearTablaUsuarios);
 
         sqlCrearTablaProductos="create table productos (idproducto integer autoincremental,idusuario integer ,nombre text, detalle text, valormin integer, valormax integer, idcategoria integer, estado integer)";
         baseDeDatos.execSQL(sqlCrearTablaProductos);
-
+        //Si estado es true(1), esta para mostrar, si es false(0) no está para mostrar
         sqlCrearTablaCategorias="create table categorias (idcategoria integer autoincremental,nombre text)";
         baseDeDatos.execSQL(sqlCrearTablaCategorias);
 

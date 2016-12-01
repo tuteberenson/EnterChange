@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.enterchange.enterchange.FragmentConfiguraciones"
+    android:weightSum="8"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="Cambiar idioma"
+        android:textSize="30dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:src="@drawable/spain_flag"
+        android:layout_gravity="center"
+        android:background="#00000000"
+        android:id="@+id/btn_img_spain"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:src="@drawable/usa_flag"
+        android:layout_gravity="center"
+        android:background="#00000000"
+        android:id="@+id/btn_img_usa"/>
+
+</LinearLayout>

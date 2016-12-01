@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -144,13 +146,36 @@ public class ActivityDetalleProducto extends FragmentActivity implements OnMapRe
 
         if (mMap!=null)
         {
-           // LatLng sydney = new LatLng(-34, 151);
-            mMap.addMarker(new MarkerOptions().position(direccionUsuarioProducto.getLatLng()).title("Usuario"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(direccionUsuarioProducto.getLatLng()));
+            CameraUpdate posUsuario = CameraUpdateFactory.newLatLngZoom(new LatLng(
+                    direccionUsuarioProducto.getLatLng().latitude,
+                    direccionUsuarioProducto.getLatLng().longitude), 15);
+            // CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+            mMap.moveCamera(posUsuario);
 
-            mMap.addMarker(new MarkerOptions().position(UsuarioActual.getDireccion().getLatLng()).title("Acá estoy yo"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(direccionUsuarioProducto.getLatLng()));
+            addMark(direccionUsuarioProducto.getLatLng(),"Usuario",false);
+           // LatLng sydney = new LatLng(-34, 151);
+            Log.d("UbicacionUserActual","Latitud: "+UsuarioActual.getDireccion().getLatLng().latitude+" - Longitud: "+ UsuarioActual.getDireccion().getLatLng().longitude);
+
+            addMark(UsuarioActual.getDireccion().getLatLng(),"Acá estoy yo",true);
+
         }
+    }
+    public void addMark(LatLng latLng, String titulo, boolean usuarioActual)
+    {
+        if (usuarioActual) {
+            MarkerOptions mo = new MarkerOptions()
+                    .position(latLng)
+                    .title(titulo)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.usermarker));
+            mMap.addMarker(mo);
+        }
+        else {
+            MarkerOptions mo = new MarkerOptions()
+                    .position(latLng)
+                    .title(titulo);
+            mMap.addMarker(mo);
+        }
+
     }
 
     public Direcciones traerDireccionUsuarioById(int id)
@@ -168,7 +193,7 @@ public class ActivityDetalleProducto extends FragmentActivity implements OnMapRe
             if (UsuarioTraido.moveToFirst())
             {
                 DireccionUnUsuario.setDireccion(UsuarioTraido.getString(5));
-                DireccionUnUsuario.setLatLng((double)UsuarioTraido.getInt(7),(double)UsuarioTraido.getInt(8));
+                DireccionUnUsuario.setLatLng(Double.valueOf(UsuarioTraido.getString(7)),Double.valueOf(UsuarioTraido.getString(8)));
             }
         }
 

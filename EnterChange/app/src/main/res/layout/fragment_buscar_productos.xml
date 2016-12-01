@@ -10,8 +10,9 @@
         android:layout_weight="1"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:visibility="gone">
+       >
         <AutoCompleteTextView
+            android:visibility="gone"
             android:id="@+id/buscar_por_nombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +26,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:id="@+id/linear_buscar_x_precio">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
@@ -95,4 +97,22 @@
 
     </Spinner>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        android:textSize="20dp"
+        android:enabled="false"
+        android:id="@+id/btn_buscarProducto"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView_BuscarProductos">
+    </ListView>
+</LinearLayout>
 </FrameLayout>

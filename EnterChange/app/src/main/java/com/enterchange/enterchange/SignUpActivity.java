@@ -91,10 +91,11 @@ public class SignUpActivity extends Activity {
              @Override
              public void onClick(View v) {
                  if (!_InputDireccion.getText().toString().trim().equals("")) {
+
                      String url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
                      url += _InputDireccion.getText().toString().trim();  // Copio la direccion ingresada al final de la URL
-                     url += "&components=country:AR&key=AIzaSyA0T6Xd7zuyregCBfyon2axZWcgs1CUq-A";
+                     url += "&components=administrative_area:CABA|country:AR&key=AIzaSyA0T6Xd7zuyregCBfyon2axZWcgs1CUq-A";
                      if (generics.isConnectedToInternet()) {
                          new GeolocalizacionTask().execute(url);  // Llamo a clase async con url
                      }
@@ -395,11 +396,12 @@ public class SignUpActivity extends Activity {
                 dialog.dismiss();
             }
 
+            if (resultado != null) {
+
             if (Validacion(resultado.get(0).getDireccion())) {
                 _InputDireccion.setError("Dirección inválida");
             } else {
 
-                if (resultado != null) {
 
                     direccionesObtenidas.clear();
                     direccionesObtenidas.addAll(resultado);

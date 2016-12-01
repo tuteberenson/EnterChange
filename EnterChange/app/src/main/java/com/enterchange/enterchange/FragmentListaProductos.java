@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +76,7 @@ public class FragmentListaProductos extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 Intent activityDetalleProducto =new Intent(thisContext,ActivityDetalleProducto.class);
-
+                Log.d("UbicacionUserActual","Latitud: "+UsuarioActual.getDireccion().getLatLng().latitude+" - Longitud: "+ UsuarioActual.getDireccion().getLatLng().longitude);
                 activityDetalleProducto.putExtra("Producto", productosMostrados.get(position));
                 activityDetalleProducto.putExtra("PosicionProducto",position);
                 //Toast.makeText(thisContext, "Producto tocado: "+productosMostrados.get(position).getNombre(), Toast.LENGTH_SHORT).show();

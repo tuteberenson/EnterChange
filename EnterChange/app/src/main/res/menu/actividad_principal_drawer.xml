@@ -5,23 +5,23 @@
         <item
             android:id="@+id/nav_productos"
             android:icon="@drawable/ic_opened_packaged"
-            android:title="Productos" />
+            android:title="@string/menu_productos" />
         <item
             android:id="@+id/nav_lotes"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Lotes" />
+            android:title="@string/menu_lotes" />
         <item
             android:id="@+id/nav_intercambios"
             android:icon="@drawable/ic_exchange_arrows"
-            android:title="Intercambios" />
+            android:title="@string/menu_intercambios" />
         <item
             android:id="@+id/nav_donaciones"
             android:icon="@drawable/ic_donation"
-            android:title="Donaciones" />
+            android:title="@string/menu_donaciones" />
         <item
             android:id="@+id/nav_buscar"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Buscar" />
+            android:title="@string/menu_buscar" />
     </group>
 
     <item android:title="Más">
@@ -29,7 +29,7 @@
             <item
                 android:id="@+id/nav_datos"
                 android:icon="@drawable/ic_profile"
-                android:title="Datos" />
+                android:title="@string/menu_datos" />
             <item
                 android:id="@+id/nav_about_me"
                 android:icon="@drawable/ic_about_me"
@@ -37,11 +37,11 @@
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="Configuracion" />
+                android:title="@string/menu_configuracion" />
             <item
                 android:id="@+id/nav_salir"
                 android:icon="@drawable/ic_log_out"
-                android:title="Salir" />
+                android:title="@string/menu_salir" />
         </menu>
     </item>
 

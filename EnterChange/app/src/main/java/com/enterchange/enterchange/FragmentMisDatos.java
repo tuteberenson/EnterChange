@@ -100,9 +100,12 @@ public class FragmentMisDatos extends Fragment {
                     String url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
 
                     url += EdTxDireccion.getText().toString().trim();  // Copio la direccion ingresada al final de la URL
-                    url += "&components=country:AR&key=AIzaSyA0T6Xd7zuyregCBfyon2axZWcgs1CUq-A";
+                    url += "&components=administrative_area:CABA|country:AR&key=AIzaSyA0T6Xd7zuyregCBfyon2axZWcgs1CUq-A";
 
-                    if (generics.isConnectedToInternet()) {
+                    Log.d("url",url);
+
+                    if (generics.isConnectedToInternet())
+                    {
                         new GeolocalizacionTask().execute(url);  // Llamo a clase async con url
                     }
                     else
@@ -235,6 +238,9 @@ public class FragmentMisDatos extends Fragment {
 
         registroAModificar.put("direccion",UsuarioActual.getDireccion().getDireccion());
 
+        Log.d("UsuarioActualM","Direccion: "+UsuarioActual.getDireccion().getDireccion()+ "Coordenadas - Lat: "+UsuarioActual.getDireccion().getLatLng().latitude +
+                " - lng: " +UsuarioActual.getDireccion().getLatLng().longitude);
+
         registroAModificar.put("latitud",UsuarioActual.getDireccion().getLatLng().latitude);
         registroAModificar.put("longitud",UsuarioActual.getDireccion().getLatLng().longitude);
 
@@ -358,31 +364,6 @@ public class FragmentMisDatos extends Fragment {
             this.dialog.setCancelable(false);
             this.dialog.show();
         }
-        @Override
-        protected void onPostExecute(ArrayList<Direcciones> resultado) {
-            super.onPostExecute(resultado);
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            if (Validacion(resultado.get(0).getDireccion())) {
-                EdTxDireccion.setError("Dirección inválida");
-            } else {
-
-                if (resultado != null) {
-
-                    direccionesObtenidas.clear();
-                    direccionesObtenidas.addAll(resultado);
-
-                    Dialog dialog = onCreateDialogSingleChoice(direccionesObtenidas);
-                    dialog.show();
-
-
-                }
-            }
-
-        }
 
 
 
@@ -406,6 +387,30 @@ public class FragmentMisDatos extends Fragment {
                 Log.d("Error", e.getMessage());                          // Error de Network o al parsear JSON
                 return null;
             }
+        }
+        @Override
+        protected void onPostExecute(ArrayList<Direcciones> resultado) {
+            super.onPostExecute(resultado);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (resultado != null) {
+
+                if (Validacion(resultado.get(0).getDireccion())) {
+                    EdTxDireccion.setError("Dirección inválida");
+                } else {
+
+
+                    direccionesObtenidas.clear();
+                    direccionesObtenidas.addAll(resultado);
+
+                    Dialog dialog = onCreateDialogSingleChoice(direccionesObtenidas);
+                    dialog.show();
+
+                }
+            }
+
         }
 
 
@@ -513,7 +518,11 @@ public class FragmentMisDatos extends Fragment {
                                 imageViewVerificado.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
                                 EdTxDireccion.setText(unaDireccion.getDireccion());
                                 Direcciones dir=new Direcciones(unaDireccion.getLatLng(),unaDireccion.getDireccion());
+
                                 UsuarioActual.setDireccion(dir);
+
+                                Log.d("UsuarioActual","Direccion: "+UsuarioActual.getDireccion().getDireccion()+ "Coordenadas - Lat: "+UsuarioActual.getDireccion().getLatLng().latitude +
+                                        " - lng: " +UsuarioActual.getDireccion().getLatLng().longitude);
                             }
                         }
 

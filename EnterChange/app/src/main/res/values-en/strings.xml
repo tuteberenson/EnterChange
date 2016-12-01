@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EnterChange</string>
+    <string name="menu_productos">Products</string>
+    <string name="menu_lotes">Lots</string>
+    <string name="menu_intercambios">Exchanges</string>
+    <string name="menu_donaciones">Donations</string>
+    <string name="menu_buscar">Search</string>
+    <string name="menu_datos">Information</string>
+    <string name="menu_configuracion">Settings</string>
+    <string name="menu_salir">Log out</string>
+</resources>

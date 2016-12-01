@@ -1,5 +1,6 @@
 package com.enterchange.enterchange;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,8 +8,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -26,11 +27,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.RuntimeRemoteException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class ActividadPrincipal extends AppCompatActivity
@@ -48,6 +47,7 @@ public class ActividadPrincipal extends AppCompatActivity
     FragmentBuscarProductos fragmentBuscarProductos;
     boolean doubleBackToExitPressedOnce = false;
     boolean existenCategorias;
+    private Locale myLocale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,9 @@ public class ActividadPrincipal extends AppCompatActivity
             ObtengoUsuarioActual(email);
 
             Notificacion();
+
+            loadLocale();
+
             existenCategorias = chequerCategorias();
 
             if (!existenCategorias) {
@@ -230,7 +233,9 @@ public class ActividadPrincipal extends AppCompatActivity
                     Direcciones direccion =new Direcciones();
 
                     direccion.setDireccion(ConjuntoDeRegistros.getString(6));
-                    direccion.setLatLng((double) ConjuntoDeRegistros.getInt(7),(double)ConjuntoDeRegistros.getInt(8));
+                    direccion.setLatLng(Double.valueOf( ConjuntoDeRegistros.getString(8)),Double.valueOf(ConjuntoDeRegistros.getString(9)));
+
+                    Log.d("UbicacionUserActual","Latitud: "+direccion.getLatLng().latitude+" - Longitud: "+ direccion.getLatLng().longitude);
 
                     UsuarioActual.setIdUsuario(ConjuntoDeRegistros.getInt(0));
                     UsuarioActual.setNombre(ConjuntoDeRegistros.getString(1));
@@ -240,6 +245,7 @@ public class ActividadPrincipal extends AppCompatActivity
                     UsuarioActual.setPassword(ConjuntoDeRegistros.getString(5));
                     UsuarioActual.setDireccion(direccion);
                     UsuarioActual.setTelefono(ConjuntoDeRegistros.getInt(7));
+
                 }while (ConjuntoDeRegistros.moveToNext());
             }
         }
@@ -347,7 +353,7 @@ public class ActividadPrincipal extends AppCompatActivity
         }
         else if (id == R.id.nav_buscar)
         {
-         setFragmentBuscarProductos();
+             setFragmentBuscarProductos();
         }
         else if (id == R.id.nav_datos) {
             setFragmentDatos();
@@ -356,8 +362,7 @@ public class ActividadPrincipal extends AppCompatActivity
             itemAgregarProductos.setVisible(false);
         }
         else if (id == R.id.nav_settings) {
-            itemBuscarProductos.setVisible(false);
-            itemAgregarProductos.setVisible(false);
+        setFragmentConfiguraciones();
         }
         else if (id == R.id.nav_salir) {
             session.logoutUser();
@@ -418,13 +423,14 @@ public class ActividadPrincipal extends AppCompatActivity
                 .commit();
 
     }
-
     public void setDefaultFragment()
     {
         Fragment defaultFragment = new FragmentEnConstruccion();
         FragmentManager fragmentManagerDefault = getFragmentManager();
         fragmentManagerDefault.beginTransaction().replace(R.id.content_actividad_principal, defaultFragment)
                 .commit();
+        itemAgregarProductos.setVisible(false);
+        itemBuscarProductos.setVisible(false);
     }
 
     public void llenarCategoriasBD()
@@ -476,6 +482,15 @@ public class ActividadPrincipal extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentListaProductos)
                 .commit();
     }
+    public void setFragmentConfiguraciones()
+    {
+        FragmentConfiguraciones fragmentConfiguraciones = new FragmentConfiguraciones();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_actividad_principal, fragmentConfiguraciones)
+                .commit();
+        itemAgregarProductos.setVisible(false);
+        itemBuscarProductos.setVisible(false);
+    }
     public ArrayList<Intercambios> LeerSolicitudes()
     {
         BaseDeDatos = generics.AbroBaseDatos();
@@ -513,4 +528,40 @@ public class ActividadPrincipal extends AppCompatActivity
 
         return listaIntercambios;
     }
-}
+
+    public void loadLocale()
+    {
+        String langPref = "Language";
+        SharedPreferences prefs = getSharedPreferences("CommonPrefs", Activity.MODE_PRIVATE);
+        String language = prefs.getString(langPref, "");
+        changeLang(language);
+    }
+    public void saveLocale(String lang)
+    {
+        String langPref = "Language";
+        SharedPreferences prefs = getSharedPreferences("CommonPrefs", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(langPref, lang);
+        editor.commit();
+    }
+    public void changeLang(String lang)
+    {
+        if (lang.equalsIgnoreCase(""))
+            return;
+        myLocale = new Locale(lang);
+        saveLocale(lang);
+        Locale.setDefault(myLocale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+    }
+
+    @Override
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (myLocale != null){
+            newConfig.locale = myLocale;
+            Locale.setDefault(myLocale);
+            getBaseContext().getResources().updateConfiguration(newConfig, getBaseContext().getResources().getDisplayMetrics());
+        }
+    }}
