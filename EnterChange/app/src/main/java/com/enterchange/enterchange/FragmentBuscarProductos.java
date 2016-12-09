@@ -19,8 +19,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarFinalValueListener;
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,8 +43,8 @@ public class FragmentBuscarProductos extends Fragment {
     Generics generics;
     SQLiteDatabase BaseDeDatos;
     private Context thisContext;
-    private EditText EdTxValorMin, EdTxValorMax, EdTxUsername;
-    LinearLayout linearBuscarPorRango;
+    private EditText /*EdTxValorMin, EdTxValorMax,*/ EdTxUsername;
+    RelativeLayout relativeLayoutRango;
     private Spinner spnCategorias;
     String TipoDeBusqueda;
     ListView listViewProductos;
@@ -46,6 +52,12 @@ public class FragmentBuscarProductos extends Fragment {
     AdapterListProductos adapterListProductos;
     ArrayList<Productos> ProductosObtenidos;
     Button btn_Buscar;
+    //CrystalRangeSeekbar es una barra que parece en pantalla que se va a usar para determinar el rango de precios
+    CrystalRangeSeekbar rangoDePrecios;
+    //Los textviews que van debajo del rango de precios
+    TextView tvMin, tvMax;
+
+    Integer valorMax = 10000, valorMin=100;
 
     /*public FragmentBuscarProductos() {
         // Required empty public constructor
@@ -85,8 +97,29 @@ public class FragmentBuscarProductos extends Fragment {
                 }
                 else
                 {
+                    listViewProductos.setAdapter(null);
                     Toast.makeText(thisContext, "No se obtuvieron productos", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        // set listener
+        rangoDePrecios.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+            @Override
+            public void valueChanged(Number minValue, Number maxValue) {
+                tvMin.setText(String.valueOf(minValue)+"$");
+                tvMax.setText(String.valueOf(maxValue)+"$");
+            }
+        });
+
+// set final value listener
+        rangoDePrecios.setOnRangeSeekbarFinalValueListener(new OnRangeSeekbarFinalValueListener() {
+            @Override
+            public void finalValue(Number minValue, Number maxValue)
+            {
+                valorMax=maxValue.intValue();
+                valorMin = minValue.intValue();
+                Log.d("CRS=>", String.valueOf(minValue) + " : " + String.valueOf(maxValue));
             }
         });
 
@@ -95,14 +128,23 @@ public class FragmentBuscarProductos extends Fragment {
 
     private void AsociarVistas(View vista)
     {
+        // get seekbar from view
+        rangoDePrecios = (CrystalRangeSeekbar) vista.findViewById(R.id.rangeSeekbar1);
+
+        // get min and max text view
+        tvMin = (TextView) vista.findViewById(R.id.textMin1);
+        tvMax = (TextView) vista.findViewById(R.id.textMax1);
+
         btn_Buscar = (Button)vista.findViewById(R.id.btn_buscarProducto);
         listViewProductos = (ListView)vista.findViewById(R.id.listView_BuscarProductos);
         autoCompleteProductos = (AutoCompleteTextView) vista.findViewById(R.id.buscar_por_nombre);
         EdTxUsername =(EditText)vista.findViewById(R.id.buscar_por_username);
-        EdTxValorMin = (EditText)vista.findViewById(R.id.buscar_valor1_producto);
-        EdTxValorMax = (EditText)vista.findViewById(R.id.buscar_valor2_producto);
+
+      //  EdTxValorMin = (EditText)vista.findViewById(R.id.buscar_valor1_producto);
+      //  EdTxValorMax = (EditText)vista.findViewById(R.id.buscar_valor2_producto);
+
         spnCategorias =(Spinner)vista.findViewById(R.id.spinner_buscar_categorias);
-        linearBuscarPorRango = (LinearLayout)vista.findViewById(R.id.linear_buscar_x_precio);
+        relativeLayoutRango = (RelativeLayout) vista.findViewById(R.id.relativeLayoutRango);
     }
 
 
@@ -163,6 +205,7 @@ public class FragmentBuscarProductos extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                             mostrarControles();
                         btn_Buscar.setEnabled(true);
+                        listViewProductos.setAdapter(null);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -182,25 +225,25 @@ public class FragmentBuscarProductos extends Fragment {
             case "Nombre":
                 autoCompleteProductos.setVisibility(View.VISIBLE);
                 EdTxUsername.setVisibility(View.GONE);
-               linearBuscarPorRango.setVisibility(View.GONE);
+                relativeLayoutRango.setVisibility(View.GONE);
                 spnCategorias.setVisibility(View.GONE);
                 break;
             case "Username":
                 autoCompleteProductos.setVisibility(View.GONE);
                 EdTxUsername.setVisibility(View.VISIBLE);
-                linearBuscarPorRango.setVisibility(View.GONE);
+                relativeLayoutRango.setVisibility(View.GONE);
                 spnCategorias.setVisibility(View.GONE);
                 break;
             case "Precio":
                 autoCompleteProductos.setVisibility(View.GONE);
                 EdTxUsername.setVisibility(View.GONE);
-                linearBuscarPorRango.setVisibility(View.VISIBLE);
+                relativeLayoutRango.setVisibility(View.VISIBLE);
                 spnCategorias.setVisibility(View.GONE);
                 break;
             case "Categoria":
                 autoCompleteProductos.setVisibility(View.GONE);
                 EdTxUsername.setVisibility(View.GONE);
-                linearBuscarPorRango.setVisibility(View.GONE);
+                relativeLayoutRango.setVisibility(View.GONE);
                 spnCategorias.setVisibility(View.VISIBLE);
                 break;
         }
@@ -220,24 +263,45 @@ public class FragmentBuscarProductos extends Fragment {
 
         String consultaSql = "";
 
-        switch (parametro)
-        {
-            case "nombre":
-                consultaSql= "SELECT p.idproducto, p.idusuario, p.nombre, p.detalle, p.valormin, p.valormax, p.idcategoria, c.nombre, p.estado" +
-                        " FROM productos p " +
-                        " INNER JOIN  categorias c" +
-                        " ON p.idcategoria = c.idcategoria " +
-                        " WHERE p.idusuario !="+UsuarioActual.getIdUsuario()+" AND p.estado = 1 AND p.nombre LIKE"+autoCompleteProductos.getText()+"% ;";
-                break;
-            case "username":
-                break;
-            case "precio":
-                break;
-            case "categoria":
-                break;
-        }
+            switch (parametro)
+            {
+                case "Nombre":
+                    consultaSql= "SELECT p.idproducto, p.idusuario, p.nombre, p.detalle, p.valormin, p.valormax, p.idcategoria, c.nombre, p.estado" +
+                            " FROM productos p " +
+                            " INNER JOIN  categorias c" +
+                            " ON p.idcategoria = c.idcategoria " +
+                            " WHERE p.idusuario !="+UsuarioActual.getIdUsuario()+" AND p.estado = 1 AND p.nombre LIKE '"+autoCompleteProductos.getText()+"%'";
+                    break;
+                case "Username":
+                    Integer idUsuarioBuscado=getIdUsuarioByUsername(EdTxUsername.getText().toString().trim());
+
+                       consultaSql= "SELECT p.idproducto, p.idusuario, p.nombre, p.detalle, p.valormin, p.valormax, p.idcategoria, c.nombre, p.estado" +
+                            " FROM productos p " +
+                            " INNER JOIN  categorias c" +
+                            " ON p.idcategoria = c.idcategoria " +
+                            " WHERE p.estado = 1 AND p.idusuario = "+idUsuarioBuscado;
+                    break;
+                case "Precio":
+                    consultaSql= "SELECT p.idproducto, p.idusuario, p.nombre, p.detalle, p.valormin, p.valormax, p.idcategoria, c.nombre, p.estado" +
+                            " FROM productos p " +
+                            " INNER JOIN  categorias c" +
+                            " ON p.idcategoria = c.idcategoria " +
+                            " WHERE p.idusuario !="+UsuarioActual.getIdUsuario()+" AND p.estado = 1 AND p.valorMin >"+valorMin +" AND p.valorMax <"+valorMax;
+                    break;
+                case "Categoria":
+                    consultaSql= "SELECT p.idproducto, p.idusuario, p.nombre, p.detalle, p.valormin, p.valormax, p.idcategoria, c.nombre, p.estado" +
+                            " FROM productos p " +
+                            " INNER JOIN  categorias c" +
+                            " ON p.idcategoria = c.idcategoria " +
+                            " WHERE p.idusuario !="+UsuarioActual.getIdUsuario()+" AND p.estado = 1 AND c.nombre='"+spnCategorias.getSelectedItem().toString()+"'";
+                    break;
+            }
+
+            Log.d("ConsultaSql",consultaSql);
+
             if (!consultaSql.equals(""))
             {
+                Log.d("ConsultaSql",consultaSql);
                 registrosProductos = BaseDeDatos.rawQuery(consultaSql, null);
 
                 if (BaseDeDatos!=null) {
@@ -266,6 +330,29 @@ public class FragmentBuscarProductos extends Fragment {
 
 
         return listaProductos;
+    }
+
+    private Integer getIdUsuarioByUsername(String username)
+    {
+        Integer id = 0;
+
+        BaseDeDatos =generics.AbroBaseDatos();
+
+        Cursor ConjuntoDeRegistros;
+
+        ConjuntoDeRegistros = BaseDeDatos.rawQuery("select idusuario from usuarios WHERE username ='"+username+"'",null);
+
+        if (BaseDeDatos!=null)
+        {
+            if (ConjuntoDeRegistros.moveToFirst())
+            {
+                do {
+                    id = ConjuntoDeRegistros.getInt(0);
+                }while (ConjuntoDeRegistros.moveToNext());
+            }
+        }
+
+        return id;
     }
 
     public void llenarCategorias()

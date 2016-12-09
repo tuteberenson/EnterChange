@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.florescu.android.rangeseekbar.test">
+
+    <uses-sdk android:minSdkVersion="12" android:targetSdkVersion="23" />
+
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+    <instrumentation android:name="android.support.test.runner.AndroidJUnitRunner"
+                     android:targetPackage="org.florescu.android.rangeseekbar.test"
+                     android:handleProfiling="false"
+                     android:functionalTest="false"
+                     android:label="Tests for org.florescu.android.rangeseekbar.test"/>
+</manifest>
